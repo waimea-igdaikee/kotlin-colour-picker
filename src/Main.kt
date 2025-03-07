@@ -12,6 +12,8 @@ import com.formdev.flatlaf.FlatDarkLaf
 import java.awt.*
 import java.awt.event.*
 import javax.swing.*
+import javax.swing.event.ChangeEvent
+import javax.swing.event.ChangeListener
 
 
 /**
@@ -28,11 +30,18 @@ fun main() {
  * Defines the UI and responds to events
  * The app model should be passwd as an argument
  */
-class MainWindow : JFrame(), ActionListener {
+class MainWindow : JFrame(), ChangeListener {
 
     // Fields to hold the UI elements
-    private lateinit var greetingLabel: JLabel
-    private lateinit var helloButton: JButton
+    private lateinit var colourLabel: JLabel
+    private lateinit var hexText: JTextField
+    private lateinit var redLabel: JLabel
+    private lateinit var redSpinner: JSpinner
+    private lateinit var greenLabel: JLabel
+    private lateinit var greenSpinner: JSpinner
+    private lateinit var blueLabel: JLabel
+    private lateinit var blueSpinner: JSpinner
+
 
     /**
      * Configure the UI and display it
@@ -50,7 +59,7 @@ class MainWindow : JFrame(), ActionListener {
      */
     private fun configureWindow() {
         title = "Kotlin Swing GUI Demo"
-        contentPane.preferredSize = Dimension(600, 350)
+        contentPane.preferredSize = Dimension(380, 250)
         defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
         isResizable = false
         layout = null
@@ -63,30 +72,60 @@ class MainWindow : JFrame(), ActionListener {
      */
     private fun addControls() {
         val defaultFont = Font(Font.SANS_SERIF, Font.PLAIN, 30)
+        val colourLabelFont = Font(Font.SANS_SERIF, Font.PLAIN, 40)
 
-        greetingLabel = JLabel("Hello, World!")
-        greetingLabel.horizontalAlignment = SwingConstants.CENTER
-        greetingLabel.bounds = Rectangle(50, 50, 500, 100)
-        greetingLabel.font = defaultFont
-        add(greetingLabel)
+        colourLabel = JLabel("TEMPORARY")
+        colourLabel.bounds = Rectangle(30,30,150,120)
+        add(colourLabel)
 
-        helloButton = JButton("Click Me!")
-        helloButton.bounds = Rectangle(50,200,500,100)
-        helloButton.font = defaultFont
-        helloButton.addActionListener(this)     // Handle any clicks
-        add(helloButton)
+        hexText = JTextField("#FFFFFF")
+        hexText.bounds = Rectangle(30,170,150,50)
+        hexText.font = defaultFont
+        add(hexText)
+
+        redLabel = JLabel("R")
+        redLabel.bounds = Rectangle(200,30,40,50)
+        redLabel.font = colourLabelFont
+        add(redLabel)
+
+        greenLabel = JLabel("G")
+        greenLabel.bounds = Rectangle(200,100,40,50)
+        greenLabel.font = colourLabelFont
+        add(greenLabel)
+
+        blueLabel = JLabel("B")
+        blueLabel.bounds = Rectangle(200,170,40,50)
+        blueLabel.font = colourLabelFont
+        add(blueLabel)
+
+        val redSpinnerSettings = SpinnerNumberModel(255, 0, 255, 1)
+        redSpinner = JSpinner(redSpinnerSettings)
+        redSpinner.bounds = Rectangle(240, 30, 100, 50)
+        redSpinner.addChangeListener(this)
+        add(redSpinner)
+
+        val greenSpinnerSettings = SpinnerNumberModel(255, 0, 255, 1)
+        greenSpinner = JSpinner(greenSpinnerSettings)
+        greenSpinner.bounds = Rectangle(240, 100, 100, 50)
+        greenSpinner.addChangeListener(this)
+        add(greenSpinner)
+
+        val blueSpinnerSettings = SpinnerNumberModel(255, 0, 255, 1)
+        blueSpinner = JSpinner(blueSpinnerSettings)
+        blueSpinner.bounds = Rectangle(240, 170, 100, 50)
+        blueSpinner.addChangeListener(this)
+        add(blueSpinner)
+
+
     }
 
 
     /**
      * Handle any UI events (e.g. button clicks)
      */
-    override fun actionPerformed(e: ActionEvent?) {
-        when (e?.source) {
-            helloButton -> {
-                greetingLabel.text = "You clicked the button!"
-            }
-        }
+
+    override fun stateChanged(e: ChangeEvent?) {
+        colourLabel.background = Colour(redSpinner.value, greenSpinner.value, blueSpinner.value)
     }
 
 }
